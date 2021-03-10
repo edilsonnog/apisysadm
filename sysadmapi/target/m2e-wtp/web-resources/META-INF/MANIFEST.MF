@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Built-By: Edilson Nogueira
+Build-Jdk: 15.0.1
+Implementation-Title: sysadmapi
+Implementation-Version: 0.0.1-SNAPSHOT
+Implementation-Vendor-Id: sysadm.api.rest
+Implementation-URL: https://projects.spring.io/spring-boot/#/spring-boot
+ -starter-parent/sysadmapi
+Created-By: Maven Integration for Eclipse
+
