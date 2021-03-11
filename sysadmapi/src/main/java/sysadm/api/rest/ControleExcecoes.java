@@ -57,7 +57,7 @@ public class ControleExcecoes extends ResponseEntityExceptionHandler {
 			msg = ((DataIntegrityViolationException) ex).getCause().getCause().getMessage();
 
 		} else if (ex instanceof ConstraintViolationException) {
-			msg = ((DataIntegrityViolationException) ex).getCause().getCause().getMessage();
+			msg = ((ConstraintViolationException) ex).getCause().getCause().getMessage();
 
 		} else if (ex instanceof PSQLException) {
 			msg = ((PSQLException) ex).getCause().getCause().getMessage();
