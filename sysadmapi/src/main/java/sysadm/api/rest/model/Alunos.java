@@ -33,14 +33,14 @@ public class Alunos implements Serializable {
 
 	private String nome;
 
-	@CPF(message = "Cpf inálido")
+	//@CPF(message = "Cpf inálido")
 	private String cpf;
 
 	private String rg;
 
-	@JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss")
+	@JsonFormat(pattern = "dd/MM/yyyy", timezone="America/Sao_Paulo")
 	@Temporal(TemporalType.DATE)
-	@DateTimeFormat(iso = ISO.DATE_TIME, pattern = "dd/MM/yyyy HH:mm:ss")
+	@DateTimeFormat(iso = ISO.DATE, pattern = "dd/MM/yyyy")
 	private Date dataNascimento;
 
 	private String cep;

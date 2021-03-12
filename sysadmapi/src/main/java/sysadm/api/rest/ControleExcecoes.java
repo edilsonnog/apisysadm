@@ -21,10 +21,11 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 @RestControllerAdvice
 @ControllerAdvice
 public class ControleExcecoes extends ResponseEntityExceptionHandler {
-
+	
+		
 	/* Interceptar erros mais comuns do Projeto */
-	@ExceptionHandler({ Exception.class, RuntimeException.class, Throwable.class })
 	@Override
+	@ExceptionHandler({ Exception.class, RuntimeException.class, Throwable.class })
 	protected ResponseEntity<Object> handleExceptionInternal(Exception ex, Object body, HttpHeaders headers,
 			HttpStatus status, WebRequest request) {
 
@@ -38,7 +39,7 @@ public class ControleExcecoes extends ResponseEntityExceptionHandler {
 		} else {
 			msg = ex.getMessage();
 		}
-
+		
 		ObjetoErro objetoErro = new ObjetoErro();
 		objetoErro.setError(msg);
 		objetoErro.setCode(status.value() + " ==> " + status.getReasonPhrase());
