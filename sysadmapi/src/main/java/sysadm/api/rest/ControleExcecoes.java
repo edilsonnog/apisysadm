@@ -1,5 +1,6 @@
 package sysadm.api.rest;
 
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -21,11 +22,11 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 @RestControllerAdvice
 @ControllerAdvice
 public class ControleExcecoes extends ResponseEntityExceptionHandler {
-	
-		
+
 	/* Interceptar erros mais comuns do Projeto */
 	@Override
-	@ExceptionHandler({ Exception.class, RuntimeException.class, Throwable.class })
+	@ExceptionHandler({ Exception.class, RuntimeException.class, Throwable.class, IOException.class,
+			IllegalArgumentException.class, IllegalStateException.class })
 	protected ResponseEntity<Object> handleExceptionInternal(Exception ex, Object body, HttpHeaders headers,
 			HttpStatus status, WebRequest request) {
 
@@ -39,7 +40,7 @@ public class ControleExcecoes extends ResponseEntityExceptionHandler {
 		} else {
 			msg = ex.getMessage();
 		}
-		
+
 		ObjetoErro objetoErro = new ObjetoErro();
 		objetoErro.setError(msg);
 		objetoErro.setCode(status.value() + " ==> " + status.getReasonPhrase());

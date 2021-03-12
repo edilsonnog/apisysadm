@@ -33,7 +33,7 @@ public class Alunos implements Serializable {
 
 	private String nome;
 
-	//@CPF(message = "Cpf inálido")
+	@CPF(message = "Cpf inálido")
 	private String cpf;
 
 	private String rg;
