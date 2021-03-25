@@ -6,6 +6,9 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -38,22 +41,65 @@ public class AlunosController {
 	@GetMapping(value = "/", produces = "application/json")
 	@CacheEvict(value = "listalunos", allEntries = true)
 	@CachePut("listalunos")
-	public ResponseEntity<List<Alunos>> init() {
+	public ResponseEntity<Page<Alunos>> init() {
 
-		List<Alunos> list = (List<Alunos>) alunosRepository.findAll();
+		PageRequest page = PageRequest.of(0, 5, Sort.by("nome"));
 
-		return new ResponseEntity<List<Alunos>>(list, HttpStatus.OK);
+		Page<Alunos> list = alunosRepository.findAll(page);
+
+		// List<Alunos> list = (List<Alunos>) alunosRepository.findAll();
+
+		return new ResponseEntity<Page<Alunos>>(list, HttpStatus.OK);
 	}
-	
+
+	@GetMapping(value = "/page/{pagina}", produces = "application/json")
+	@CacheEvict(value = "listalunospage", allEntries = true)
+	@CachePut("listalunospage")
+	public ResponseEntity<Page<Alunos>> initPage(@PathVariable("pagina") int pagina) {
+
+		PageRequest page = PageRequest.of(pagina, 5, Sort.by("nome"));
+
+		Page<Alunos> list = alunosRepository.findAll(page);
+
+		return new ResponseEntity<Page<Alunos>>(list, HttpStatus.OK);
+	}
+
 	@GetMapping(value = "/alunoPorNome/{nome}", produces = "application/json")
 	@CachePut("listalunosnome")
-	public ResponseEntity<List<Alunos>> alunoPorNome(@PathVariable("nome") String nome) throws InterruptedException {
+	public ResponseEntity<Page<Alunos>> alunoPorNome(@PathVariable("nome") String nome) throws InterruptedException {
 
-		List<Alunos> list = (List<Alunos>) alunosRepository.findAlunoByNome(nome);
+		PageRequest pageRequest = null;
+		Page<Alunos> list = null;
 
-		return new ResponseEntity<List<Alunos>>(list, HttpStatus.OK);
+		if (nome == null || (nome != null && nome.trim().isEmpty()) || nome.equalsIgnoreCase("undefined")) {
+			pageRequest = PageRequest.of(0, 5, Sort.by("nome"));
+			list = alunosRepository.findAll(pageRequest);
+		} else {
+			pageRequest = PageRequest.of(0, 5, Sort.by("nome"));
+			list = alunosRepository.findAlunoByNamePage(nome, pageRequest);
+		}
+
+		return new ResponseEntity<Page<Alunos>>(list, HttpStatus.OK);
 	}
-	
+
+	@GetMapping(value = "/alunoPorNome/{nome}/page/{page}", produces = "application/json")
+	@CachePut("listalunosnome")
+	public ResponseEntity<Page<Alunos>> alunoPorNomePage(@PathVariable("nome") String nome,
+			@PathVariable("page") int page) throws InterruptedException {
+
+		PageRequest pageRequest = null;
+		Page<Alunos> list = null;
+
+		if (nome == null || (nome != null && nome.trim().isEmpty()) || nome.equalsIgnoreCase("undefined")) {
+			pageRequest = PageRequest.of(page, 5, Sort.by("nome"));
+			list = alunosRepository.findAll(pageRequest);
+		} else {
+			pageRequest = PageRequest.of(page, 5, Sort.by("nome"));
+			list = alunosRepository.findAlunoByNamePage(nome, pageRequest);
+		}
+
+		return new ResponseEntity<Page<Alunos>>(list, HttpStatus.OK);
+	}
 
 	@PostMapping(value = "/", produces = "application/json")
 	public ResponseEntity<Alunos> cadastrar(@RequestBody Alunos alunos) {
